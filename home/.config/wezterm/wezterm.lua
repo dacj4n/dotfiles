@@ -7,8 +7,18 @@ local act = wezterm.action
 
 wezterm.on("gui-startup", function(cmd)
 	local _, _, window = wezterm.mux.spawn_window(cmd or {})
-	-- 左上角坐标（macOS 有效）
-	window:gui_window():set_position(400, 200)
+	-- 自动居中到屏幕
+	local gui_window = window:gui_window()
+	local screen = gui_window:active_screen()
+	local screen_width = screen:width()
+	local screen_height = screen:height()
+	local window_width = gui_window:get_dimensions().pixel_width
+	local window_height = gui_window:get_dimensions().pixel_height
+	local x = (screen_width - window_width) / 2
+	local y = (screen_height - window_height) / 2
+	gui_window:set_position(x, y)
+	-- 固定坐标（如需恢复，注释上方居中代码，取消下方注释）
+	-- gui_window:set_position(400, 200)
 end)
 
 -- ============================================================
@@ -96,8 +106,8 @@ local config = {
 	-- ----------------------------------------------------------
 	-- 窗口外观
 	-- ----------------------------------------------------------
-	initial_cols = 160,
-	initial_rows = 45,
+	initial_cols = 170,
+	initial_rows = 50,
 	window_decorations = "RESIZE",
 	adjust_window_size_when_changing_font_size = false,
 	window_padding = {
@@ -114,7 +124,7 @@ local config = {
 	enable_tab_bar = true,
 	hide_tab_bar_if_only_one_tab = false,
 	show_new_tab_button_in_tab_bar = true,
-	tab_max_width = 32,
+	tab_max_width = 64,
 
 	-- ----------------------------------------------------------
 	-- 背景与透明
